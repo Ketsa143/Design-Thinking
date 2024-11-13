@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Definir</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet"
+        type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+        rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="index.html">IA para la Educación del Futuro</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.html">Empatizar</a></li>
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="definir.html">Definir</a></li>
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="idear.html">Idear</a></li>
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="prototipar.html">Prototipar</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header-->
+    <header class="masthead" style="background-image: url('assets/img/about-bg.jpg')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="site-heading">
+                        <br>
+                        <h1>Fase Definir</h1>
+                        <span class="subheading">Un Blog por Andrés Ocaña, Nikolas Quicasan y Keppler Sánchez</span>
+                        <br><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content-->
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <!-- Post preview-->
+                <div class="post-preview">
+                    <p> En la fase de Definir, analizamos y sintetizamos la información recopilada durante la fase de
+                        Empatizar para identificar insights clave y formular una declaración clara y concisa del
+                        problema que deseamos abordar. Este proceso nos permitió enfocar nuestros esfuerzos en una
+                        problemática específica, significativa y abordable.</p>
+                </div>
+                <!-- Divider-->
+                <hr class="my-4" />
+
+
+                <!-- Post preview-->
+                <div class="post-preview">
+                    <h2 class="post-title">Revisión de Datos</h2>
+                    <p>
+                        Para comenzar, revisamos todas las notas, transcripciones, fotos, videos y resultados de las
+                        encuestas recopiladas durante la fase de Empatizar. A continuación, se presentan los datos
+                        obtenidos de las entrevistas y encuestas:
+                    </p>
+                </div>
+                <!-- Divider-->
+                <hr class="my-4" />
+
+
+                <!-- Post preview-->
+                <div class="post-preview">
+
+                    <h2 class="post-title">Entrevistas</h2>
+                    <video width="360" height="640" controls style="margin-left: 20%;">
+                        <source src="assets/video/empatizar.mp4" type="video/mp4">
+                        <source src="assets/video/empatizar.mp4" type="video/mp4">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+
+                    <p class="post-meta">
+                        Entrevista por
+                        <b>Nikolas Quicasan y Keppler Sanchez</b>
+                        el 20 de septiembre de 2024
+                    </p>
+                </div>
+                <!-- Divider-->
+                <hr class="my-4" />
+
+                <!-- Post preview-->
+                <div class="post-preview">
+                    <h2 class="post-title">Encuestas</h2>
+
+                    <!-- Canvases para los gráficos -->
+                    <canvas id="frequencyChart" width="400" height="200"></canvas>
+                    <canvas id="benefitChart" width="400" height="200"></canvas>
+                    <canvas id="negativeImpactChart" width="400" height="200"></canvas>
+                    <canvas id="aiUsageChart" width="400" height="200"></canvas>
+
+                    <script>
+                        // Función para cargar y procesar el archivo Excel
+                        function cargarArchivoExcel() {
+                            fetch('/assets/doc/encuesta.xlsx')  // Ruta al archivo en el servidor
+                                .then(response => response.arrayBuffer())
+                                .then(data => {
+                                    const workbook = XLSX.read(data, { type: 'array' });
+                                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                                    const jsonData = XLSX.utils.sheet_to_json(sheet);
+
+                                    // Función para contar las respuestas por categoría
+                                    function contarRespuestas(datos, columna) {
+                                        const conteo = {};
+                                        datos.forEach(row => {
+                                            const respuesta = row[columna];
+                                            if (respuesta) {
+                                                conteo[respuesta] = (conteo[respuesta] || 0) + 1;
+                                            }
+                                        });
+                                        return conteo;
+                                    }
+
+                                    // Contar las respuestas para cada pregunta
+                                    const frecuenciaUso = contarRespuestas(jsonData, '¿Qué tan frecuente usa la Inteligencia Artificial (IA) en su vida académica?');
+                                    const beneficiosIA = contarRespuestas(jsonData, '¿En su opinión, la IA tiene beneficios prácticos en sus estudios?');
+                                    const impactoNegativo = contarRespuestas(jsonData, '¿En su opinión, la IA puede afectar negativamente en su vida académica?');
+                                    const usoFrecuenteIA = contarRespuestas(jsonData, '¿Qué Inteligencias Artificiales usa con más frecuencia?');
+
+                                    // Función para crear gráficos de torta
+                                    function crearGraficoTorta(conteo, canvasId, titulo) {
+                                        const ctx = document.getElementById(canvasId).getContext('2d');
+                                        const total = Object.values(conteo).reduce((a, b) => a + b, 0); // Total de respuestas
+
+                                        new Chart(ctx, {
+                                            type: 'pie',
+                                            data: {
+                                                labels: Object.keys(conteo),
+                                                datasets: [{
+                                                    label: titulo,
+                                                    data: Object.values(conteo).map(val => (val / total) * 100), // Convertir a porcentajes
+                                                    backgroundColor: [
+                                                        'rgba(255, 99, 132, 0.2)',
+                                                        'rgba(54, 162, 235, 0.2)',
+                                                        'rgba(255, 206, 86, 0.2)',
+                                                        'rgba(75, 192, 192, 0.2)',
+                                                        'rgba(153, 102, 255, 0.2)'
+                                                    ],
+                                                    borderColor: [
+                                                        'rgba(255, 99, 132, 1)',
+                                                        'rgba(54, 162, 235, 1)',
+                                                        'rgba(255, 206, 86, 1)',
+                                                        'rgba(75, 192, 192, 1)',
+                                                        'rgba(153, 102, 255, 1)'
+                                                    ],
+                                                    borderWidth: 1
+                                                }]
+                                            },
+                                            options: {
+                                                plugins: {
+                                                    tooltip: {
+                                                        callbacks: {
+                                                            label: function (context) {
+                                                                const label = context.label || '';
+                                                                const value = context.raw;
+                                                                return `${label}: ${value.toFixed(2)}%`;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+
+                                    // Crear los gráficos de torta para cada pregunta
+                                    crearGraficoTorta(frecuenciaUso, 'frequencyChart', 'Frecuencia de uso de IA');
+                                    crearGraficoTorta(beneficiosIA, 'benefitChart', 'Percepción sobre beneficios de IA');
+                                    crearGraficoTorta(impactoNegativo, 'negativeImpactChart', 'Percepción sobre impacto negativo de IA');
+                                    crearGraficoTorta(usoFrecuenteIA, 'aiUsageChart', 'IA usada con más frecuencia');
+                                })
+                                .catch(error => console.error('Error al cargar el archivo Excel:', error));
+                        }
+
+                        // Llamar a la función al cargar la página
+                        window.onload = cargarArchivoExcel;
+                    </script>
+
+
+                    <p class="post-meta">
+                        Encuesta realiazada a
+                        <b>Estudiosos UMB</b>
+                        el 20 de septiembre de 2024
+                    </p>
+                </div>
+                <!-- Divider-->
+                <hr class="my-4" />
+
+                <!-- Post preview-->
+                <div class="post-preview">
+                    <h2 class="post-title">Identificación de Insights (Perspectivas)</h2>
+                    <p>
+                        <b>Experiencia General: </b><br><br>
+
+                        Los estudiantes consideran que la IA es una herramienta importante en su vida académica, siempre
+                        y cuando se utilice de manera adecuada.
+                        <br><br>
+                        <b>Aspectos Positivos y Negativos: </b>
+                        <br><br>
+                        <b>Aspectos positivos:</b> La IA ayuda a mejorar el rendimiento académico y facilita la
+                        realización de tareas.
+                        <br>
+                        <b>Aspectos negativos:</b> La IA puede ser perjudicial si se utiliza incorrectamente, como en el
+                        caso de realizar tareas que deberían hacer los estudiantes.
+                        <br><br>
+                        <b>Herramientas y Tecnologías Utilizadas: </b>
+                        <br><br>
+                        ChatGPT es la herramienta de IA más mencionada y utilizada por los estudiantes.
+                        <br><br>
+                        <b>Desafíos y Problemas: </b>
+                        <br><br>
+                        Los estudiantes reconocen que el uso indebido de la IA puede tener efectos negativos, como la
+                        dependencia excesiva y la falta de desarrollo de habilidades críticas.
+                    </p>
+                </div>
+                <!-- Divider-->
+                <hr class="my-4" />
+
+                <!-- Post preview-->
+                <div class="post-preview">
+                    <h2 class="post-title">Formulación del Problema</h2>
+                    <p>
+                        Basándonos en los insights obtenidos, hemos formulado la siguiente declaración del problema:
+                        <br><br>
+
+                        <i>¿Cómo podríamos utilizar la inteligencia artificial para personalizar la educación y mejorar
+                            la experiencia de aprendizaje de los estudiantes, abordando al mismo tiempo las
+                            preocupaciones sobre el uso indebido y la dependencia excesiva?"</i><br><br>
+
+                        <b>Personalización de la Educación:</b><br><br>
+
+                        La personalización del aprendizaje es uno de los aspectos más prometedores de la inteligencia
+                        artificial en la educación. Las herramientas de IA pueden analizar grandes volúmenes de datos
+                        sobre el rendimiento y las preferencias de los estudiantes para crear experiencias de
+                        aprendizaje adaptadas a sus necesidades individuales. Esto incluye la recomendación de recursos
+                        específicos, la adaptación del ritmo de enseñanza y la identificación de áreas donde el
+                        estudiante necesita más apoyo. Sin embargo, la implementación de estas tecnologías debe ser
+                        cuidadosa para asegurar que se respeten las diferencias individuales y se promueva la equidad en
+                        el acceso a recursos educativos.
+                        <br><br>
+                        <b>Mejora de la Experiencia de Aprendizaje:</b><br><br>
+
+                        La IA tiene el potencial de enriquecer la experiencia de aprendizaje al proporcionar asistencia
+                        en tiempo real, facilitar la colaboración entre estudiantes y ofrecer nuevas formas de
+                        interactuar con el contenido educativo. Por ejemplo, los asistentes virtuales pueden responder
+                        preguntas, los sistemas de tutoría inteligente pueden guiar a los estudiantes a través de
+                        problemas complejos y las plataformas de aprendizaje adaptativo pueden ajustar el contenido
+                        según el progreso del estudiante. Estas herramientas pueden hacer que el aprendizaje sea más
+                        interactivo y efectivo, pero es esencial garantizar que los estudiantes sean capaces de utilizar
+                        estas tecnologías de manera autónoma y responsable.
+                        <br><br>
+                        <b>Preocupaciones sobre el Uso Indebido:</b><br><br>
+
+                        Una de las principales preocupaciones es el uso indebido de la IA, donde los estudiantes pueden
+                        depender de estas herramientas para realizar tareas que deberían hacer ellos mismos. Esto puede
+                        llevar a una disminución en el desarrollo de habilidades críticas como el pensamiento analítico,
+                        la resolución de problemas y la creatividad. Para abordar esta preocupación, es crucial
+                        establecer límites claros sobre el uso de la IA en el entorno académico y fomentar una cultura
+                        de aprendizaje que valore el esfuerzo y la integridad académica. Además, los educadores deben
+                        ser capacitados para integrar la IA de manera que complemente, y no reemplace, el aprendizaje
+                        activo y participativo.
+                        <br><br>
+                        <b>Dependencia Excesiva:</b><br><br>
+
+                        La dependencia excesiva de la IA puede tener consecuencias negativas a largo plazo, como la
+                        disminución de la capacidad de los estudiantes para realizar tareas sin asistencia tecnológica.
+                        Esto puede afectar su preparación para enfrentar desafíos en el mundo real, donde la tecnología
+                        puede no estar siempre disponible. Para mitigar este riesgo, es importante educar a los
+                        estudiantes sobre el uso responsable de la IA y promover el desarrollo de habilidades que les
+                        permitan utilizar la tecnología como una herramienta complementaria, en lugar de una muleta.
+                    </p>
+                </div>
+                <!-- Divider-->
+                <hr class="my-4" />
+
+                <!-- Post preview-->
+                <div class="post-preview">
+                    <h2 class="post-title">Conclusión</h2>
+                    <p>
+                        En la fase de Definir, hemos logrado formular una declaración clara y concisa del problema que
+                        abordaremos en nuestro proyecto. Basándonos en los insights recopilados, nos hemos propuesto el
+                        desafío de utilizar la inteligencia artificial para personalizar la educación y mejorar la
+                        experiencia de aprendizaje de los estudiantes, al tiempo que abordamos las preocupaciones sobre
+                        el uso indebido y la dependencia excesiva. Esta declaración refleja nuestra comprensión profunda
+                        de los beneficios y desafíos asociados con la IA en la educación, y establece una dirección
+                        clara para el desarrollo de soluciones innovadoras y éticas. Además, la identificación de áreas
+                        críticas como la privacidad, la ética y el equilibrio entre el uso de la IA y el desarrollo de
+                        habilidades fundamentales, nos brinda una base sólida para abordar los desafíos de manera
+                        integral y sostenible.
+                    </p>
+                </div>
+                <!-- Divider-->
+                <hr class="my-4" />
+
+                <!-- Pager-->
+                <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase"
+                        href="idear.html">Idear</a></div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer-->
+    <footer class="border-top">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="small text-center text-muted fst-italic">Copyright &copy; Dising Thinking 2024</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>

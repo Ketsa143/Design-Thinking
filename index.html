@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Empatizar</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet"
+        type="text/css" />
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"
+        rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="index.html">IA para la Educación del Futuro</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.html">Empatizar</a></li>
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="definir.html">Definir</a></li>
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="idear.html">Idear</a></li>
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="prototipar.html">Prototipar</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Page Header-->
+    <header class="masthead" style="background-image: url('assets/img/home-bg.jpg')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="site-heading">
+                        <h1>Fase Empatizar</h1>
+                        <span class="subheading">Un Blog por Andrés Ocaña, Nikolas Quicasan y Keppler Sánchez</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content-->
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <!-- Post preview-->
+                <div class="post-preview">
+                    <p>En la fase de Empatizar, nuestro objetivo fue comprender profundamente las experiencias,
+                        necesidades y desafíos de los estudiantes en relación con la inteligencia artificial (IA)
+                        en su vida académica. Para ello, realizamos entrevistas y encuestas detalladas, y
+                        recopilamos información valiosa que nos permitió identificar insights clave.</p>
+                </div>
+                <!-- Divider-->
+                <hr class="my-4" />
+
+
+                <!-- Post preview-->
+                <div class="post-preview">
+                    <h2 class="post-title">Métodos Utilizados</h2>
+                    <p>
+                        Para recopilar información relevante, utilizamos los siguientes métodos:<br>
+                        <br>
+                        Entrevistas individuales con estudiantes<br>
+                        Encuestas en línea<br>
+                    </p>
+                </div>
+                <!-- Divider-->
+                <hr class="my-4" />
+
+
+                <!-- Post preview-->
+                <div class="post-preview">
+
+                    <h2 class="post-title">Entrevistas</h2>
+                    <video width="360" height="640" controls style="margin-left: 20%;">
+                        <source src="assets/video/empatizar.mp4" type="video/mp4">
+                        <source src="assets/video/empatizar.mp4" type="video/mp4">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+
+                    <p class="post-meta">
+                        Entrevista por
+                        <b>Nikolas Quicasan y Keppler Sanchez</b>
+                        el 20 de septiembre de 2024
+                    </p>
+                </div>
+                <!-- Divider-->
+                <hr class="my-4" />
+
+                <!-- Post preview-->
+                <div class="post-preview">
+                    <h2 class="post-title">Encuestas</h2>
+
+                    <!-- Canvases para los gráficos -->
+                    <canvas id="frequencyChart" width="400" height="200"></canvas>
+                    <canvas id="benefitChart" width="400" height="200"></canvas>
+                    <canvas id="negativeImpactChart" width="400" height="200"></canvas>
+                    <canvas id="aiUsageChart" width="400" height="200"></canvas>
+
+                    <script>
+                        // Función para cargar y procesar el archivo Excel
+                        function cargarArchivoExcel() {
+                            fetch('/assets/doc/encuesta.xlsx')  // Ruta al archivo en el servidor
+                                .then(response => response.arrayBuffer())
+                                .then(data => {
+                                    const workbook = XLSX.read(data, { type: 'array' });
+                                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                                    const jsonData = XLSX.utils.sheet_to_json(sheet);
+
+                                    // Función para contar las respuestas por categoría
+                                    function contarRespuestas(datos, columna) {
+                                        const conteo = {};
+                                        datos.forEach(row => {
+                                            const respuesta = row[columna];
+                                            if (respuesta) {
+                                                conteo[respuesta] = (conteo[respuesta] || 0) + 1;
+                                            }
+                                        });
+                                        return conteo;
+                                    }
+
+                                    // Contar las respuestas para cada pregunta
+                                    const frecuenciaUso = contarRespuestas(jsonData, '¿Qué tan frecuente usa la Inteligencia Artificial (IA) en su vida académica?');
+                                    const beneficiosIA = contarRespuestas(jsonData, '¿En su opinión, la IA tiene beneficios prácticos en sus estudios?');
+                                    const impactoNegativo = contarRespuestas(jsonData, '¿En su opinión, la IA puede afectar negativamente en su vida académica?');
+                                    const usoFrecuenteIA = contarRespuestas(jsonData, '¿Qué Inteligencias Artificiales usa con más frecuencia?');
+
+                                    // Función para crear gráficos de torta
+                                    function crearGraficoTorta(conteo, canvasId, titulo) {
+                                        const ctx = document.getElementById(canvasId).getContext('2d');
+                                        const total = Object.values(conteo).reduce((a, b) => a + b, 0); // Total de respuestas
+
+                                        new Chart(ctx, {
+                                            type: 'pie',
+                                            data: {
+                                                labels: Object.keys(conteo),
+                                                datasets: [{
+                                                    label: titulo,
+                                                    data: Object.values(conteo).map(val => (val / total) * 100), // Convertir a porcentajes
+                                                    backgroundColor: [
+                                                        'rgba(255, 99, 132, 0.2)',
+                                                        'rgba(54, 162, 235, 0.2)',
+                                                        'rgba(255, 206, 86, 0.2)',
+                                                        'rgba(75, 192, 192, 0.2)',
+                                                        'rgba(153, 102, 255, 0.2)'
+                                                    ],
+                                                    borderColor: [
+                                                        'rgba(255, 99, 132, 1)',
+                                                        'rgba(54, 162, 235, 1)',
+                                                        'rgba(255, 206, 86, 1)',
+                                                        'rgba(75, 192, 192, 1)',
+                                                        'rgba(153, 102, 255, 1)'
+                                                    ],
+                                                    borderWidth: 1
+                                                }]
+                                            },
+                                            options: {
+                                                plugins: {
+                                                    tooltip: {
+                                                        callbacks: {
+                                                            label: function (context) {
+                                                                const label = context.label || '';
+                                                                const value = context.raw;
+                                                                return `${label}: ${value.toFixed(2)}%`;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+
+                                    // Crear los gráficos de torta para cada pregunta
+                                    crearGraficoTorta(frecuenciaUso, 'frequencyChart', 'Frecuencia de uso de IA');
+                                    crearGraficoTorta(beneficiosIA, 'benefitChart', 'Percepción sobre beneficios de IA');
+                                    crearGraficoTorta(impactoNegativo, 'negativeImpactChart', 'Percepción sobre impacto negativo de IA');
+                                    crearGraficoTorta(usoFrecuenteIA, 'aiUsageChart', 'IA usada con más frecuencia');
+                                })
+                                .catch(error => console.error('Error al cargar el archivo Excel:', error));
+                        }
+
+                        // Llamar a la función al cargar la página
+                        window.onload = cargarArchivoExcel;
+                    </script>
+
+
+                    <p class="post-meta">
+                        Encuesta realiazada a
+                        <b>Estudiosos UMB</b>
+                        el 20 de septiembre de 2024
+                    </p>
+                </div>
+                <!-- Divider-->
+                <hr class="my-4" />
+
+                <!-- Post preview-->
+                <div class="post-preview">
+                    <h2 class="post-title">Conclusión</h2>
+                    <p>
+                        En la fase de Empatizar, hemos logrado comprender mejor las experiencias y
+                        desafíos de los estudiantes en relación con la IA en su vida académica.
+                        Estos insights nos han proporcionado una base sólida para definir el
+                        problema y desarrollar soluciones efectivas en las fases siguientes del
+                        proceso de Design Thinking.
+                    </p>
+                </div>
+                <!-- Divider-->
+                <hr class="my-4" />
+
+                <!-- Pager-->
+                <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase"
+                        href="definir.html">Definir</a></div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer-->
+    <footer class="border-top">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="small text-center text-muted fst-italic">Copyright &copy; Dising Thinking 2024</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>
