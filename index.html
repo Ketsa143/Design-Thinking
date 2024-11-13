@@ -120,7 +120,7 @@
                     <script>
                         // Función para cargar y procesar el archivo Excel
                         function cargarArchivoExcel() {
-                            fetch('/assets/doc/encuesta.xlsx')  // Ruta al archivo en el servidor
+                            fetch('assets/doc/encuesta.xlsx')  // Ruta al archivo en el servidor
                                 .then(response => response.arrayBuffer())
                                 .then(data => {
                                     const workbook = XLSX.read(data, { type: 'array' });
