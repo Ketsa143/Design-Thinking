@@ -119,7 +119,7 @@
                     <script>
                         // Función para cargar y procesar el archivo JSON
                         function cargarArchivoJSON() {
-                            fetch('/assets/doc/encuesta.json')  // Ruta al archivo JSON en el servidor
+                            fetch('assets/doc/encuesta.json')  // Ruta al archivo JSON en el servidor
                                 .then(response => response.json())
                                 .then(data => {
                                     const jsonData = data.Sheet1;
